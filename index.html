@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Virexa - Domain Threat Scanner</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ================= HEADER ================= -->
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="logo">
+                🛡
+            </div>
+
+            <div>
+                <h1>Virexa</h1>
+                <span>Domain Threat Scanner</span>
+            </div>
+
+        </div>
+
+        <div class="connection-status">
+            <span class="status-dot"></span>
+            <span id="systemStatus">Idle</span>
+        </div>
+
+    </header>
+
+
+    <!-- ================= CONTENT ================= -->
+    <main class="content">
+
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="sidebar">
+
+            <!-- KONFIGURASI -->
+            <section class="card">
+
+                <div class="card-title">
+                    <span class="title-dot blue"></span>
+                    Konfigurasi
+                </div>
+
+                <div class="card-body">
+
+                    <!-- VT API KEY -->
+                    <label for="apiKey">
+                        VT API Key
+                    </label>
+
+                    <input
+                        type="password"
+                        id="apiKey"
+                        placeholder="Tempel API key..."
+                        autocomplete="off"
+                    >
+
+                    <small>
+                        API key digunakan hanya dari browser Anda.
+                    </small>
+
+
+                    <!-- PROXY -->
+                    <label for="proxyUrl">
+                        Proxy URL
+                    </label>
+
+                    <input
+                        type="text"
+                        id="proxyUrl"
+                        value="https://virexa-proxy.afadhil2512.workers.dev"
+                    >
+
+                    <small>
+                        Cloudflare Worker Anda.
+                    </small>
+
+
+                    <!-- THRESHOLD -->
+                    <div class="two-column">
+
+                        <div>
+
+                            <label for="threshold">
+                                Threshold
+                            </label>
+
+                            <input
+                                type="number"
+                                id="threshold"
+                                value="2"
+                                min="0"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label for="delay">
+                                Delay (dtk)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="delay"
+                                value="16"
+                                min="0"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- TEST DOMAIN -->
+            <section class="card">
+
+                <div class="card-title">
+                    <span class="title-dot red"></span>
+                    Test Domain
+                </div>
+
+                <div class="card-body">
+
+                    <label for="testDomain">
+                        Domain
+                    </label>
+
+                    <input
+                        type="text"
+                        id="testDomain"
+                        placeholder="contoh.com"
+                    >
+
+                    <button
+                        class="primary-button"
+                        id="testButton"
+                    >
+                        Test VirusTotal
+                    </button>
+
+                    <button
+                        class="secondary-button"
+                        id="clearButton"
+                    >
+                        Bersihkan
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- INFO -->
+            <section class="info-box">
+
+                <strong>Catatan</strong>
+
+                <p>
+                    API Key tidak ditulis ke source code GitHub.
+                    Key dimasukkan secara manual melalui browser.
+                </p>
+
+            </section>
+
+        </aside>
+
+
+        <!-- ================= MAIN ================= -->
+        <section class="main-panel">
+
+            <!-- RINGKASAN -->
+            <section class="card summary-card">
+
+                <div class="card-title">
+                    <span class="title-dot green"></span>
+                    Ringkasan
+                </div>
+
+                <div class="stats">
+
+                    <div class="stat">
+                        <strong id="totalDomain">0</strong>
+                        <span>Total domain</span>
+                    </div>
+
+                    <div class="stat malicious">
+                        <strong id="maliciousCount">0</strong>
+                        <span>Malicious</span>
+                    </div>
+
+                    <div class="stat phishing">
+                        <strong id="phishingCount">0</strong>
+                        <span>Phishing</span>
+                    </div>
+
+                    <div class="stat clean">
+                        <strong id="cleanCount">0</strong>
+                        <span>Bersih</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- HASIL TEST -->
+            <section class="card result-card">
+
+                <div class="card-title">
+                    <span class="title-dot purple"></span>
+                    Hasil Test VirusTotal
+                </div>
+
+
+                <div
+                    id="loading"
+                    class="loading hidden"
+                >
+                    Memeriksa domain ke VirusTotal...
+                </div>
+
+
+                <div
+                    id="errorBox"
+                    class="error-box hidden"
+                >
+                </div>
+
+
+                <div
+                    id="resultContent"
+                    class="result-content hidden"
+                >
+
+                    <div class="result-header">
+
+                        <div>
+
+                            <span class="result-label">
+                                DOMAIN / URL
+                            </span>
+
+                            <h2 id="resultDomain">
+                                -
+                            </h2>
+
+                        </div>
+
+
+                        <div
+                            id="resultStatus"
+                            class="status-badge"
+                        >
+                            -
+                        </div>
+
+                    </div>
+
+
+                    <div class="result-grid">
+
+                        <div class="result-item">
+
+                            <span>Malicious</span>
+
+                            <strong id="resultMalicious">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-item">
+
+                            <span>Suspicious</span>
+
+                            <strong id="resultSuspicious">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-item">
+
+                            <span>Undetected</span>
+
+                            <strong id="resultUndetected">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-item">
+
+                            <span>Total Engine</span>
+
+                            <strong id="resultTotal">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="raw-response">
+
+                        <div class="raw-title">
+                            VirusTotal Response
+                        </div>
+
+                        <pre id="rawResponse"></pre>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
